@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Care Cart — product card design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; font-family: Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body {
+      font-family: Poppins, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #111;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 24px 12px 40px;
+      color: #111827;
+    }
+    .shell {
+      width: 390px;
+      max-width: 100%;
+      height: 844px;
+      background: #fff;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,.4);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .content {
+      flex: 1;
+      min-height: 0;
+      padding: 20px 20px 170px;
+      overflow-y: auto;
+      background: #f9fafb;
+    }
+    .video {
+      border-radius: 16px;
+      overflow: hidden;
+      background: #e9d5ff;
+      aspect-ratio: 16/10;
+      position: relative;
+      margin-bottom: 24px;
+    }
+    .video img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: .85;
+    }
+    .video-fallback {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(145deg, #f5d0fe 0%, #e9d5ff 40%, #ddd6fe 100%);
+      display: flex;
+      align-items: flex-end;
+      padding: 16px;
+    }
+    .play {
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: #ec4899;
+      border: none;
+      box-shadow: 0 4px 16px rgba(236,72,153,.35);
+      display: grid;
+      place-items: center;
+    }
+    .play::after {
+      content: "";
+      width: 0; height: 0;
+      border-left: 14px solid #fff;
+      border-top: 9px solid transparent;
+      border-bottom: 9px solid transparent;
+      margin-left: 3px;
+    }
+    .video-title {
+      position: absolute;
+      left: 14px; bottom: 14px; right: 14px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      text-shadow: 0 1px 8px rgba(0,0,0,.35);
+    }
+    .duration {
+      position: absolute;
+      left: 14px; bottom: 40px;
+      background: #3b82f6;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    /* —— Product card (design) —— */
+    .order-group {
+      margin-bottom: 24px;
+    }
+    .order-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #6b7280;
+      margin: 0 0 12px;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 10px;
+      display: flex;
+      align-items: stretch;
+      gap: 10px;
+      box-shadow: 0 1px 2px rgba(17,24,39,.04);
+      animation: enter .4s cubic-bezier(0.2, 0, 0, 1) both;
+      margin-bottom: 8px;
+    }
+    .order-group .card:nth-child(2) { animation-delay: .05s; }
+    .order-group .card:nth-child(3) { animation-delay: .1s; }
+    @keyframes enter {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .thumb-col {
+      width: 88px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-self: stretch;
+    }
+    .thumb {
+      flex: 1;
+      min-height: 88px;
+      height: auto;
+      border-radius: 10px;
+      background: #f3f4f6;
+      outline: 1px solid oklch(0 0 0 / 0.1);
+      outline-offset: -1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 6px;
+    }
+    .thumb-art {
+      width: 56px;
+      height: 72px;
+      border-radius: 6px;
+      background: linear-gradient(180deg, #fafafa 0%, #e5e7eb 100%);
+      border: 1px solid #e5e7eb;
+      position: relative;
+    }
+    .thumb-art::before {
+      content: "HealFast";
+      position: absolute;
+      inset: 28% 8px auto;
+      font-size: 9px;
+      font-weight: 700;
+      color: #6b7280;
+      text-align: center;
+    }
+    .thumb-art::after {
+      content: "Scar Gel";
+      position: absolute;
+      inset: auto 8px 22%;
+      font-size: 8px;
+      color: #9ca3af;
+      text-align: center;
+    }
+    .btn-details {
+      height: 32px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #7b7cff 0%, #d14aa2 100%);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: scale .15s cubic-bezier(0.2, 0, 0, 1);
+    }
+    .btn-details:active { scale: 0.96; }
+    .meta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; justify-content: center; }
+    .name {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.25;
+      color: #111827;
+      letter-spacing: -0.01em;
+    }
+    .price-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+    }
+    .price-label { font-size: 13px; color: #111827; }
+    .price { font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .qty {
+      display: inline-flex;
+      align-items: center;
+      align-self: center;
+      flex-shrink: 0;
+      height: 36px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      background: #fff;
+      padding: 4px;
+      gap: 0;
+      width: fit-content;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    .qty button {
+      width: 28px; height: 28px;
+      border: none;
+      border-radius: 999px;
+      background: transparent;
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+      color: #111827;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      transition: background .15s cubic-bezier(0.2, 0, 0, 1), scale .15s cubic-bezier(0.2, 0, 0, 1);
+    }
+    .qty button:active { scale: 0.96; background: #f9fafb; }
+    .qty button svg {
+      width: 16px;
+      height: 16px;
+      stroke: #111827;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .qty-value {
+      min-width: 22px;
+      padding: 0 8px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
+    .purchase-seg {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      width: 100%;
+      padding: 3px;
+      background: #f3f4f6;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+    .purchase-seg button {
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      padding: 8px 6px;
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.2;
+      color: #6b7280;
+      cursor: pointer;
+      transition: background .15s cubic-bezier(0.2, 0, 0, 1), color .15s, box-shadow .15s;
+    }
+    .purchase-seg button[aria-checked="true"] {
+      background: #fff;
+      color: #111827;
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    }
+    .purchase-seg button.seg-subscribe[aria-checked="true"] {
+      color: #7c3aed;
+    }
+    .purchase-seg button:active { scale: 0.98; }
+    .price-row .price-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+    }
+    .price-was-row {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+    .price-was {
+      font-size: 11px;
+      color: #9ca3af;
+      text-decoration: line-through;
+      font-variant-numeric: tabular-nums;
+    }
+    .price-save {
+      font-size: 11px;
+      font-weight: 500;
+      color: #9ca3af;
+      font-variant-numeric: tabular-nums;
+    }
+    .price-row.is-subscribed .price { color: #111827; font-weight: 600; }
+
+    .change-callout {
+      margin-top: 12px;
+      padding: 10px 12px;
+      background: #ecfdf5;
+      border: 1px solid #6ee7b7;
+      border-radius: 10px;
+      font-size: 12px;
+      color: #065f46;
+      line-height: 1.35;
+    }
+
+    .footer {
+      position: absolute;
+      left: 0; right: 0;
+      bottom: 60px;
+      background: #fff;
+      border-top: 1px solid #e5e7eb;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 -6px 20px rgba(0,0,0,.06);
+      z-index: 5;
+    }
+    .footer-count {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: #6b7280;
+    }
+    .footer-total {
+      font-size: 24px;
+      font-weight: 400;
+      margin-top: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+    .checkout {
+      border: none;
+      border-radius: 999px;
+      padding: 14px 22px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 14px;
+      background: linear-gradient(90deg, #7b7cff 0%, #d14aa2 100%);
+      cursor: pointer;
+      transition: scale .15s cubic-bezier(0.2, 0, 0, 1);
+    }
+    .checkout:active { scale: 0.96; }
+    .nav {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 60px;
+      background: #fff;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 8px;
+      z-index: 6;
+    }
+    .nav a {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      text-decoration: none;
+      color: #6b7280;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+    .nav a.active { color: #9333ea; }
+    .nav svg { width: 24px; height: 24px; stroke-width: 2; }
+    .caption {
+      margin-top: 16px;
+      font-size: 12px;
+      color: #6b7280;
+      line-height: 1.4;
+    }
+
+    /* Remove confirmation — mirrors Cancel monitoring bottom sheet */
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 40;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(0,0,0,.45);
+    }
+    .modal-overlay[hidden] { display: none; }
+    .modal {
+      width: 100%;
+      background: #fff;
+      border-radius: 24px 24px 0 0;
+      box-shadow: 0 -8px 32px rgba(0,0,0,.12);
+      padding: 20px 24px 28px;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      border: none;
+      background: transparent;
+      color: #111827;
+      padding: 4px;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+    }
+    .modal-close svg { width: 22px; height: 22px; }
+    .modal-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #111827;
+      letter-spacing: -0.02em;
+      margin: 8px 28px 12px 0;
+      line-height: 1.2;
+    }
+    .modal-desc {
+      font-size: 15px;
+      line-height: 1.45;
+      color: #4b5563;
+      margin: 0 0 16px;
+    }
+    .modal-desc strong { color: #111827; font-weight: 600; }
+    .modal-attest {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 1.5px solid #4338ca;
+      border-radius: 12px;
+      background: #eef2ff;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    .modal-attest input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .modal-check {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+      border-radius: 6px;
+      border: 2px solid #4338ca;
+      background: #fff;
+      display: grid;
+      place-items: center;
+      margin-top: 1px;
+    }
+    .modal-check svg {
+      width: 14px;
+      height: 14px;
+      color: #fff;
+      opacity: 0;
+    }
+    .modal-attest input:checked + .modal-check {
+      background: #312e81;
+      border-color: #312e81;
+    }
+    .modal-attest input:checked + .modal-check svg { opacity: 1; }
+    .modal-attest span {
+      font-size: 14px;
+      line-height: 1.35;
+      color: #1f2937;
+      font-weight: 500;
+    }
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .modal-btn {
+      width: 100%;
+      border-radius: 999px;
+      padding: 14px 20px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: scale .15s cubic-bezier(0.2, 0, 0, 1), opacity .15s;
+    }
+    .modal-btn:active { scale: 0.98; }
+    .modal-btn-keep {
+      border: none;
+      color: #fff;
+      background: linear-gradient(90deg, #7b7cff 0%, #d14aa2 100%);
+    }
+    .modal-btn-remove {
+      border: 1.5px solid #e11d48;
+      background: #fff;
+      color: #e11d48;
+    }
+    .modal-btn-remove:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="content">
+      <div class="video">
+        <div class="video-fallback"></div>
+        <button class="play" aria-label="Play"></button>
+        <span class="duration">01:39</span>
+        <div class="video-title">Why taking Medication is important?</div>
+      </div>
+
+      <h2>Care Cart (6)</h2>
+
+      <section class="order-group" aria-label="Recommended by Dr. Melseth">
+        <h3 class="order-label">Recommended by Dr. Melseth</h3>
+
+      <article class="card" aria-label="Product card">
+        <div class="thumb-col">
+          <div class="thumb" aria-hidden="true">
+            <div class="thumb-art"></div>
+          </div>
+        </div>
+        <div class="meta">
+          <h3 class="name">HealFast Medical Grade 100% Silicone Scar Gel</h3>
+          <div class="purchase-seg" role="radiogroup" aria-label="Purchase type">
+            <button type="button" role="radio" aria-checked="true" onclick="setPurchaseType(this, 'otp')">One-time</button>
+            <button type="button" role="radio" aria-checked="false" class="seg-subscribe" onclick="setPurchaseType(this, 'sub')">Subscribe</button>
+          </div>
+          <div class="price-row">
+            <div class="qty" role="group" aria-label="Quantity">
+              <button type="button" aria-label="Remove from cart" title="Remove" onclick="openRemoveModal(this)">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              </button>
+              <div class="qty-value">1</div>
+              <button type="button" aria-label="Increase">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+            </div>
+            <span class="price" data-base="24.99">$24.99</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" aria-label="Product card">
+        <div class="thumb-col">
+          <div class="thumb" aria-hidden="true">
+            <div class="thumb-art"></div>
+          </div>
+        </div>
+        <div class="meta">
+          <h3 class="name">MediHoney Wound & Burn Dressing Gel</h3>
+          <div class="purchase-seg" role="radiogroup" aria-label="Purchase type">
+            <button type="button" role="radio" aria-checked="false" onclick="setPurchaseType(this, 'otp')">One-time</button>
+            <button type="button" role="radio" aria-checked="true" class="seg-subscribe" onclick="setPurchaseType(this, 'sub')">Subscribe</button>
+          </div>
+          <div class="price-row is-subscribed">
+            <div class="qty" role="group" aria-label="Quantity">
+              <button type="button" aria-label="Decrease">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+              <div class="qty-value">3</div>
+              <button type="button" aria-label="Increase">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+            </div>
+            <div class="price-stack">
+              <div class="price-was-row">
+                <span class="price-save">-10%</span>
+                <span class="price-was">$74.97</span>
+              </div>
+              <span class="price" data-base="74.97">$67.47</span>
+            </div>
+          </div>
+        </div>
+      </article>
+      </section>
+
+      <section class="order-group" aria-label="Recommended by Dr. Carter">
+        <h3 class="order-label">Recommended by Dr. Carter</h3>
+
+      <article class="card" aria-label="Product card">
+        <div class="thumb-col">
+          <div class="thumb" aria-hidden="true">
+            <div class="thumb-art"></div>
+          </div>
+        </div>
+        <div class="meta">
+          <h3 class="name">HealFast Medical Grade 100% Silicone Scar Gel</h3>
+          <div class="purchase-seg" role="radiogroup" aria-label="Purchase type">
+            <button type="button" role="radio" aria-checked="true" onclick="setPurchaseType(this, 'otp')">One-time</button>
+            <button type="button" role="radio" aria-checked="false" class="seg-subscribe" onclick="setPurchaseType(this, 'sub')">Subscribe</button>
+          </div>
+          <div class="price-row">
+            <div class="qty" role="group" aria-label="Quantity">
+              <button type="button" aria-label="Remove from cart" title="Remove" onclick="openRemoveModal(this)">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              </button>
+              <div class="qty-value">1</div>
+              <button type="button" aria-label="Increase">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+            </div>
+            <span class="price" data-base="24.99">$24.99</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" aria-label="Product card">
+        <div class="thumb-col">
+          <div class="thumb" aria-hidden="true">
+            <div class="thumb-art"></div>
+          </div>
+        </div>
+        <div class="meta">
+          <h3 class="name">HealFast Medical Grade 100% Silicone Scar Gel</h3>
+          <div class="purchase-seg" role="radiogroup" aria-label="Purchase type">
+            <button type="button" role="radio" aria-checked="true" onclick="setPurchaseType(this, 'otp')">One-time</button>
+            <button type="button" role="radio" aria-checked="false" class="seg-subscribe" onclick="setPurchaseType(this, 'sub')">Subscribe</button>
+          </div>
+          <div class="price-row">
+            <div class="qty" role="group" aria-label="Quantity">
+              <button type="button" aria-label="Remove from cart" title="Remove" onclick="openRemoveModal(this)">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              </button>
+              <div class="qty-value">1</div>
+              <button type="button" aria-label="Increase">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+            </div>
+            <span class="price" data-base="24.99">$24.99</span>
+          </div>
+        </div>
+      </article>
+      </section>
+
+    </div>
+
+    <div class="footer">
+      <div>
+        <div class="footer-count">6 products</div>
+        <div class="footer-total">$142.44</div>
+      </div>
+      <button type="button" class="checkout">Proceed to Checkout</button>
+    </div>
+
+    <nav class="nav" aria-label="Patient">
+      <a href="#" aria-label="For You">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+          <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+          <path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>
+        </svg>
+        For You
+      </a>
+      <a href="#" class="active" aria-label="Care Cart" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+          <path d="M3 6h18"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        Care Cart
+      </a>
+      <a href="#" aria-label="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+        Settings
+      </a>
+    </nav>
+
+    <div class="modal-overlay" id="remove-modal" hidden role="dialog" aria-modal="true" aria-labelledby="remove-modal-title">
+      <div class="modal">
+        <button type="button" class="modal-close" aria-label="Close" onclick="closeRemoveModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+        <h2 class="modal-title" id="remove-modal-title">Remove from cart?</h2>
+        <p class="modal-desc">
+          This removes <strong id="remove-modal-product">HealFast Medical Grade 100% Silicone Scar Gel</strong> from your care cart.
+        </p>
+        <label class="modal-attest">
+          <input type="checkbox" id="remove-attest" checked onchange="syncRemoveConfirm()" />
+          <span class="modal-check" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <span>I understand this item will be removed from my cart.</span>
+        </label>
+        <div class="modal-actions">
+          <button type="button" class="modal-btn modal-btn-keep" onclick="closeRemoveModal()">Keep in cart</button>
+          <button type="button" class="modal-btn modal-btn-remove" id="remove-confirm" onclick="closeRemoveModal()">Remove item</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function setPurchaseType(btn, type) {
+      var group = btn.closest('.purchase-seg');
+      var card = btn.closest('.card');
+      var buttons = group.querySelectorAll('[role="radio"]');
+      buttons.forEach(function (b) { b.setAttribute('aria-checked', 'false'); });
+      btn.setAttribute('aria-checked', 'true');
+      var row = card.querySelector('.price-row');
+      var priceEl = row.querySelector('.price');
+      if (!priceEl) return;
+      var base = parseFloat(priceEl.getAttribute('data-base') || priceEl.textContent.replace(/[^0-9.]/g, ''));
+      if (!priceEl.getAttribute('data-base')) priceEl.setAttribute('data-base', base.toFixed(2));
+      var stack = row.querySelector('.price-stack');
+      if (type === 'sub') {
+        row.classList.add('is-subscribed');
+        var discounted = (base * 0.9).toFixed(2);
+        if (!stack) {
+          stack = document.createElement('div');
+          stack.className = 'price-stack';
+          stack.innerHTML =
+            '<div class="price-was-row">' +
+              '<span class="price-save">-10%</span>' +
+              '<span class="price-was"></span>' +
+            '</div>' +
+            '<span class="price" data-base="' + base.toFixed(2) + '"></span>';
+          priceEl.replaceWith(stack);
+        } else if (!stack.querySelector('.price-save')) {
+          var was = stack.querySelector('.price-was');
+          var wasRow = document.createElement('div');
+          wasRow.className = 'price-was-row';
+          was.replaceWith(wasRow);
+          var badge = document.createElement('span');
+          badge.className = 'price-save';
+          badge.textContent = '-10%';
+          wasRow.appendChild(badge);
+          wasRow.appendChild(was);
+        }
+        stack.querySelector('.price-was').textContent = '$' + base.toFixed(2);
+        stack.querySelector('.price').textContent = '$' + discounted;
+        stack.querySelector('.price').setAttribute('data-base', base.toFixed(2));
+      } else {
+        row.classList.remove('is-subscribed');
+        if (stack) {
+          var p = document.createElement('span');
+          p.className = 'price';
+          p.setAttribute('data-base', base.toFixed(2));
+          p.textContent = '$' + base.toFixed(2);
+          stack.replaceWith(p);
+        } else {
+          priceEl.textContent = '$' + base.toFixed(2);
+        }
+      }
+    }
+    function openRemoveModal(btn) {
+      var card = btn.closest('.card');
+      var name = card ? card.querySelector('.name') : null;
+      var product = document.getElementById('remove-modal-product');
+      if (name && product) product.textContent = name.textContent.trim();
+      var attest = document.getElementById('remove-attest');
+      if (attest) attest.checked = true;
+      syncRemoveConfirm();
+      document.getElementById('remove-modal').hidden = false;
+    }
+    function closeRemoveModal() {
+      document.getElementById('remove-modal').hidden = true;
+      var attest = document.getElementById('remove-attest');
+      if (attest) attest.checked = false;
+      syncRemoveConfirm();
+    }
+    function syncRemoveConfirm() {
+      var attest = document.getElementById('remove-attest');
+      var btn = document.getElementById('remove-confirm');
+      if (btn && attest) btn.disabled = !attest.checked;
+    }
+  </script>
+</body>
+</html>

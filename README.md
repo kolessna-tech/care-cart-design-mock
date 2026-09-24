@@ -1,2 +1,3 @@
-# care-cart-design-mock
-Care Cart product card design mock — static HTML
+# Care Cart — product card design mock
+
+Open: https://kolessna-tech.github.io/care-cart-design-mock/
