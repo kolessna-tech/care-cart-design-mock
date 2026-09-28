@@ -137,14 +137,11 @@
     .thumb-col {
       width: 88px;
       flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      align-self: stretch;
+      align-self: flex-start;
     }
     .thumb {
-      flex: 1;
-      min-height: 88px;
-      height: auto;
+      width: 88px;
+      height: 88px;
       border-radius: 10px;
       background: #f3f4f6;
       outline: 1px solid oklch(0 0 0 / 0.1);
@@ -153,33 +150,53 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      padding: 6px;
+      padding: 8px;
+    }
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
     }
     .thumb-art {
-      width: 56px;
-      height: 72px;
-      border-radius: 6px;
-      background: linear-gradient(180deg, #fafafa 0%, #e5e7eb 100%);
+      border-radius: 4px;
+      background: linear-gradient(160deg, #fafafa 0%, #e8eaed 100%);
       border: 1px solid #e5e7eb;
       position: relative;
+      box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    }
+    .thumb-art.box-landscape {
+      width: 100%;
+      height: 62%;
+    }
+    .thumb-art.pad-square {
+      width: 78%;
+      height: 78%;
+    }
+    .thumb-art.bottle {
+      width: 42%;
+      height: 88%;
+      border-radius: 6px 6px 4px 4px;
+    }
+    .thumb-art.tape {
+      width: 72%;
+      height: 72%;
+      border-radius: 50%;
     }
     .thumb-art::before {
-      content: "HealFast";
+      content: attr(data-label);
       position: absolute;
-      inset: 28% 8px auto;
-      font-size: 9px;
-      font-weight: 700;
-      color: #6b7280;
-      text-align: center;
-    }
-    .thumb-art::after {
-      content: "Scar Gel";
-      position: absolute;
-      inset: auto 8px 22%;
+      inset: 0;
+      display: grid;
+      place-items: center;
       font-size: 8px;
+      font-weight: 600;
       color: #9ca3af;
       text-align: center;
+      padding: 4px;
+      line-height: 1.2;
     }
+    .thumb-art::after { display: none; }
     .btn-details {
       height: 32px;
       border: none;
@@ -203,7 +220,7 @@
     .price-row {
       display: flex;
       flex-direction: row;
-      align-items: center;
+      align-items: flex-end;
       justify-content: space-between;
       gap: 12px;
       width: 100%;
@@ -538,7 +555,7 @@
       <article class="card" aria-label="Product card">
         <div class="thumb-col">
           <div class="thumb" aria-hidden="true">
-            <div class="thumb-art"></div>
+            <img src="product-thumbs/product-1.png" alt="Wound dressing" />
           </div>
         </div>
         <div class="meta">
@@ -565,7 +582,7 @@
       <article class="card" aria-label="Product card">
         <div class="thumb-col">
           <div class="thumb" aria-hidden="true">
-            <div class="thumb-art"></div>
+            <img src="product-thumbs/product-4.png" alt="Supplement jar" />
           </div>
         </div>
         <div class="meta">
@@ -602,7 +619,7 @@
       <article class="card" aria-label="Product card">
         <div class="thumb-col">
           <div class="thumb" aria-hidden="true">
-            <div class="thumb-art"></div>
+            <img src="product-thumbs/product-2.png" alt="Gauze pad" />
           </div>
         </div>
         <div class="meta">
@@ -629,7 +646,7 @@
       <article class="card" aria-label="Product card">
         <div class="thumb-col">
           <div class="thumb" aria-hidden="true">
-            <div class="thumb-art"></div>
+            <img src="product-thumbs/product-3.png" alt="Medical tape" />
           </div>
         </div>
         <div class="meta">
